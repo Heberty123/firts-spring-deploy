@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+
+	<!-- 
+	<header th:replace="~{fragmentos/header:: headerr}"></header>
+	-->
+	
+	<header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="#" class="nav-link px-2 text-secondary">| Home |</a></li>
+          <li><a th:href="@{/Home/importacoes}" class="nav-link px-2 text-white">| Show import |</a></li>
+          <li><a th:href="@{/usuarios}" class="nav-link px-2 text-white">| User list |</a></li>
+          <li><a th:href="@{/Home/suspeitas}" class="nav-link px-2 text-white">| suspicious transactions |</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">| About |</a></li>
+        </ul>
+
+
+        <div class="text-end">
+          <a th:href="@{/cadastrar}" class="btn btn-outline-light me-2">Cadastrar conta</a>
+          <a onclick="document.querySelector('#form-login').submit()" href="#" class="btn btn-warning">Sign-up</a>
+          <form id="form-login" th:action="@{/logout}" method="POST"></form>
+        </div>
+      </div>
+    </div>
+    </header>
+	
+
+
+	<section class="container">
+	
+		<h1 class="mt-3">Bem vindo ao projeto de controle de transações financeiras</h1>
+		
+		<h2>Importe o seu arquivo no input</h2>
+		
+		<form role="form" th:action="@{/Home/upload}" method="POST" enctype="multipart/form-data">
+			<div class="mb-3 form-group">
+			  <label for="formFile" class="form-label">Default file input example</label>
+			  <input class="form-control" th:classappend="${isInvalid} ? is-invalid : is-valid" type="file" id="formFile" name="file">
+			  <div th:text="${erro}" id="formFile" class="invalid-feedback"></div>
+			</div>
+			<div class="mb-3 row">
+				<button type="submit" class="btn btn-primary col col-auto me-3" style="width: 85px;">Enviar</button>
+			</div>
+		</form>
+		
+
+		
+		<div th:classappend="${emptyContent} ? d-block : d-none" class="row mt-3">
+		
+			<div class="col">
+				<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+				  <div class="card-header">Arquivo conteúdo vazio !</div>
+				  <div class="card-body">
+				    <h5 class="card-title">Danger content empty</h5>
+				    <p class="card-text">can't upload file content empty, beacuse it's going not process to register transfer</p>
+				  </div>
+				</div>
+			</div>
+		
+			<div class="col">
+			
+			
+			
+			</div>
+			
+		</div>
+		
+
+		
+		
+		<div class="row">
+		<div th:classappend="${erroDuplicado} ? d-block : d-none" class="mt-3 col p-8">
+			<h2>Transações duplicadas</h2>
+			
+			
+			<table class="table table-danger">
+			  <thead>
+			    <tr>
+			      <th class="table-secondary" scope="col">Banco Origem</th>
+			      <th class="table-secondary" scope="col">Agencia Origem</th>
+			      <th class="table-secondary" scope="col">Conta Origem</th>
+			      <th class="table-secondary" scope="col">Banco Destino</th>
+			      <th class="table-secondary" scope="col">Agencia Destino</th>
+			      <th class="table-secondary" scope="col">Conta Destino</th>
+			      <th class="table-secondary" scope="col">Valor</th>
+			      <th class="table-secondary" scope="col">Data</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr th:each="transacao : ${listaErroDuplicadas}">
+			      <td th:text="${transacao.bancoOrigem}">Mark</td>
+			      <td th:text="${transacao.agenciaOrigem}">Mark</td>
+			      <td th:text="${transacao.contaOrigem}">Mark</td>
+			      <td th:text="${transacao.bancoDestino}">Mark</td>
+			      <td th:text="${transacao.agenciaDestino}">Mark</td>
+			      <td th:text="${transacao.contaDestino}">Mark</td>
+			      <td th:text="${transacao.valor}">Mark</td>
+			      <td th:text="${#dates.format(transacao.data, 'dd/MM/yyyy')}">Mark</td>
+			    </tr>
+			  </tbody>
+			</table>
+		</div>
+		
+
+		
+		</div>
+		
+			<div class="row">
+						<div th:classappend="${erroDate} ? d-block : d-none"  class="mt-3 col p-8">
+							<h2>Transações com data diferente que não foram persistida !</h2>
+							
+							
+							<table class="table table-primary">
+							  <thead>
+							    <tr>
+							      <th class="table-secondary" scope="col">Banco Origem</th>
+							      <th class="table-secondary" scope="col">Agencia Origem</th>
+							      <th class="table-secondary" scope="col">Conta Origem</th>
+							      <th class="table-secondary" scope="col">Banco Destino</th>
+							      <th class="table-secondary" scope="col">Agencia Destino</th>
+							      <th class="table-secondary" scope="col">Conta Destino</th>
+							      <th class="table-secondary" scope="col">Valor</th>
+							      <th class="table-secondary" scope="col">Data</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr th:each="transacao : ${listaErroDate}">
+							      <td th:text="${transacao.bancoOrigem}">Mark</td>
+							      <td th:text="${transacao.agenciaOrigem}">Mark</td>
+							      <td th:text="${transacao.contaOrigem}">Mark</td>
+							      <td th:text="${transacao.bancoDestino}">Mark</td>
+							      <td th:text="${transacao.agenciaDestino}">Mark</td>
+							      <td th:text="${transacao.contaDestino}">Mark</td>
+							      <td th:text="${transacao.valor}">Mark</td>
+							      <td class="table-warning" th:text="${#dates.format(transacao.data, 'dd/MM/yyyy')}">Mark</td>
+							    </tr>
+							  </tbody>
+							</table>
+						</div>
+
+						<div th:classappend="${erroNull} ? d-block : d-none" class="mt-3 col p-8">
+							<h2>Transações com alguns campos vazios não foram persistida !</h2>
+							
+							
+							<table class="table table-primary">
+							  <thead>
+							    <tr>
+							      <th class="table-secondary" scope="col">Banco Origem</th>
+							      <th class="table-secondary" scope="col">Agencia Origem</th>
+							      <th class="table-secondary" scope="col">Conta Origem</th>
+							      <th class="table-secondary" scope="col">Banco Destino</th>
+							      <th class="table-secondary" scope="col">Agencia Destino</th>
+							      <th class="table-secondary" scope="col">Conta Destino</th>
+							      <th class="table-secondary" scope="col">Valor</th>
+							      <th class="table-secondary" scope="col">Data</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr th:each="transacao : ${listaErroNull}">
+							      <td th:classappend="${transacao.bancoOrigem != ''} ? table-primary: table-warning" th:text="${transacao.bancoOrigem != ''} ? ${transacao.bancoOrigem} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.agenciaOrigem} ? table-primary : table-warning" th:text="${transacao.agenciaOrigem != null} ? ${transacao.agenciaOrigem} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.contaOrigem != ''} ? table-primary : table-warning" th:text="${transacao.contaOrigem != ''} ? ${transacao.contaOrigem} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.bancoDestino != ''} ? table-primary : table-warning" th:text="${transacao.bancoDestino != ''} ? ${transacao.bancoDestino} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.agenciaDestino} ? table-primary : table-warning" th:text="${transacao.agenciaDestino != null} ? ${transacao.agenciaDestino} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.contaDestino != ''} ? table-primary : table-warning" th:text="${transacao.contaDestino != ''} ? ${transacao.contaDestino} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.valor} ? table-primary : table-warning" th:text="${transacao.valor != null} ? ${transacao.valor} : 'null value!'">Mark</td>
+							      <td th:classappend="${transacao.data} ? table-primary : table-warning" th:text="${transacao.data != null} ? ${#dates.format(transacao.data, 'dd/MM/yyyy')} : 'null value!'">Mark</td>
+							      																
+							    </tr>
+							  </tbody>
+							</table>
+						</div>
+
+		</div>
+		
+		
+
+	</section>
+	
+	
+	
+	<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-2 border-top p-3">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="text-muted">© 2021 Company, Inc</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-muted" href="https://www.linkedin.com/in/heberty-guelfi-3b5a991bb/"><img alt="" th:src="@{/img/github.svg}" width="45" height="45"><use xlink:href="#facebook"></use></svg></a></li>
+      <li class="ms-3"><a class="text-muted" href="#"><img alt="" th:src="@{/img/linkedin.svg}" width="45" height="45"><use xlink:href="#linkedim"></use></svg></a></li>
+      <li class="ms-3"><a class="text-muted" href="#"><img alt="" th:src="@{/img/facebook.svg}" width="45" height="45"><use xlink:href="#facebook"></use></svg></a></li>
+      
+    </ul>
+  </footer>
+	
+</body>
+</html>

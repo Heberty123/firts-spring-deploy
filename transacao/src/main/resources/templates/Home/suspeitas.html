@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+
+
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a th:href="@{/Home}" class="nav-link px-2 text-white">| Home |</a></li>
+          <li><a th:href="@{/Home/importacoes}" class="nav-link px-2 text-white">| Show import |</a></li>
+          <li><a th:href="@{/usuarios}" class="nav-link px-2 text-white">| User list |</a></li>
+          <li><a th:href="@{/Home/suspeitas}" class="nav-link px-2 text-secondary">| suspicious transactions |</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">| About |</a></li>
+        </ul>
+
+
+        <div class="text-end">
+          <a th:href="@{/cadastrar}" class="btn btn-outline-light me-2">Cadastrar conta</a>
+          <a onclick="document.querySelector('#form-login').submit()" href="#" class="btn btn-warning">Sign-up</a>
+          <form id="form-login" th:action="@{/logout}" method="POST"></form>
+        </div>
+      </div>
+    </div>
+    </header>
+
+<div class="container mt-3">
+<h1 class="card-subtitle mb-2 text-muted mt-3">ANÁLISE DE TRANSAÇÕES SUSPEITAS</h1>
+
+<form th:action="@{/Home/suspeitas}" method="POST">
+<label for="data" class="form-label">Pass month</label>
+<input type="month" id="data" class="form-control" name="data" th:value="${data}">
+<div id="data" class="form-text">
+	Pass month that you want to see list of suspicious transactions
+</div>
+<input type="submit" class="btn btn-primary mb-5">
+</form>
+
+	<h2 class="card-subtitle mb-2 text-muted">Transações suspeitas: </h2>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				  <th class="table-secondary" scope="col">Banco Origem</th>
+			      <th class="table-secondary" scope="col">Agencia Origem</th>
+			      <th class="table-secondary" scope="col">Conta Origem</th>
+			      <th class="table-secondary" scope="col">Banco Destino</th>
+			      <th class="table-secondary" scope="col">Agencia Destino</th>
+			      <th class="table-secondary" scope="col">Conta Destino</th>
+			      <th class="table-secondary" scope="col">Valor</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="transacao : ${SusTransacao}">
+				<td th:text="${transacao.bancoOrigem}">Mark</td>
+			      <td th:text="${transacao.agenciaOrigem}">Mark</td>
+			      <td th:text="${transacao.contaOrigem}">Mark</td>
+			      <td th:text="${transacao.bancoDestino}">Mark</td>
+			      <td th:text="${transacao.agenciaDestino}">Mark</td>
+			      <td th:text="${transacao.contaDestino}">Mark</td>
+			      <td th:text="${#numbers.formatDecimal(transacao.valor, 3, 'POINT', 2, 'COMMA')}">Mark</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h2 class="card-subtitle mb-2 text-muted">Contas suspeitas: </h2>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				  <th class="table-secondary" scope="col">Banco</th>
+			      <th class="table-secondary" scope="col">Agencia</th>
+			      <th class="table-secondary" scope="col">Conta</th>
+			      <th class="table-secondary" scope="col">Valor movimentado</th>
+			      <th class="table-secondary" scope="col">tipo movimentação</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="conta : ${SusAccount}">
+				<td th:text="${conta.banco}">Mark</td>
+			      <td th:text="${conta.agencia}">Mark</td>
+			      <td th:text="${conta.conta}">Mark</td>
+			      <td th:text="${#numbers.formatDecimal(conta.valor, 3, 'POINT', 2, 'COMMA')}">Mark</td>
+			      <td th:text="${conta.tipo}">Mark</td>
+
+			</tr>
+		</tbody>
+	</table>
+	
+	<h2 class="card-subtitle mb-2 text-muted">Agências suspeitas: </h2>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				  <th class="table-secondary" scope="col">Banco</th>
+			      <th class="table-secondary" scope="col">Agencia</th>
+			      <th class="table-secondary" scope="col">Valor movimentado</th>
+			      <th class="table-secondary" scope="col">tipo movimentação</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="agency : ${SusAgency}">
+				<td th:text="${agency.banco}">Mark</td>
+			      <td th:text="${agency.agencia}">Mark</td>
+			      <td th:text="${#numbers.formatDecimal(agency.valor, 3, 'POINT', 2, 'COMMA')}">Mark</td>
+			      <td th:text="${agency.tipo}">Mark</td>
+
+			</tr>
+		</tbody>
+	</table>
+	
+	
+
+</div>
+</body>
+</html>
